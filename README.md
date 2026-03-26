@@ -1,6 +1,8 @@
 # UX Doctor
 
-A CLI tool that scans codebases for UX/UI accessibility and design quality issues, outputting structured diagnostics with exact file paths and line numbers so AI coding agents (Claude Code, Cursor, Codex, etc.) know precisely where to go and what to fix.
+A CLI that scans your codebase for UX, accessibility, and design quality issues. It outputs structured diagnostics with exact file paths, line numbers, WCAG criteria, and fix suggestions.
+
+Built for AI coding agents (Claude Code, Cursor, Codex, Gemini CLI, Amp Code, OpenCode) and human developers alike.
 
 ## Quick Start
 
@@ -10,64 +12,126 @@ npx ux-doctor@latest . --verbose
 
 ## How It Works
 
-1. **Detects** your project (framework, CSS approach, UI library)
-2. **Runs analysis passes** in parallel:
-   - **Source Lint** — AST-based checks on JSX/TSX (ARIA, semantic HTML, keyboard, forms, media)
-   - **CSS Analysis** — Static analysis of CSS/SCSS/Tailwind (contrast, typography, spacing, focus, motion)
-   - **Runtime Audit** — Optional Playwright + axe-core on a running URL
-3. **Outputs diagnostics** with exact file paths, line numbers, WCAG criteria, and fix suggestions
-4. **Scores** your project 0-100
+1. Detects your project framework, CSS approach, and UI library
+2. Runs analysis passes in parallel:
+   - **Source Lint** - AST-based checks on JSX/TSX via oxlint custom plugin
+   - **CSS Analysis** - Static analysis of stylesheets via PostCSS
+   - **Runtime Audit** - Optional browser audit via Playwright + axe-core
+3. Outputs diagnostics with file paths, line numbers, and fix examples
+4. Scores your project 0-100
+
+### Supported Stacks
+
+| Category | Detected |
+|----------|----------|
+| Frameworks | Next.js, Vite, CRA, Remix, Gatsby, Expo, React Native |
+| CSS | Tailwind, CSS Modules, styled-components, Emotion, SCSS, Less, vanilla CSS |
+| UI Libraries | shadcn, MUI, Chakra UI, Ant Design, Radix, Headless UI, Mantine |
 
 ## Usage
 
 ```bash
-# Full static scan with file details
+# Full scan with details
 npx ux-doctor@latest . --verbose
 
-# JSON output for AI agents
+# JSON output
 npx ux-doctor@latest . --json > report.json
+
+# LLM-optimized output (grouped by file, with fix examples)
+npx ux-doctor@latest . --agent
 
 # Score only
 npx ux-doctor@latest . --score
 
-# Only files changed vs main
-npx ux-doctor@latest . --verbose --diff main
+# Scan only changed files
+npx ux-doctor@latest . --diff main
 
 # Skip specific passes
 npx ux-doctor@latest . --no-source-lint
 npx ux-doctor@latest . --no-css-analysis
+
+# Use APCA contrast algorithm
+npx ux-doctor@latest . --verbose --contrast apca
 ```
 
 ## CLI Options
 
 | Option | Description |
 |--------|-------------|
-| `--verbose` | Show file details per rule |
+| `--verbose` | Show file-level details per rule |
 | `--json` | Output diagnostics as JSON |
+| `--agent` | Output in LLM-optimized markdown format |
 | `--score` | Output only the score |
-| `--diff [base]` | Scan only files changed vs base branch |
+| `--diff [base]` | Scan only files changed vs a base branch (default: main) |
 | `--no-source-lint` | Skip source code linting |
 | `--no-css-analysis` | Skip CSS/token analysis |
-| `--url <url>` | Enable runtime audit (requires Playwright) |
-| `--wcag-level <level>` | Target WCAG level: A, AA, AAA (default: AA) |
-| `--install-skill` | Install skill for AI agents |
+| `--url <url>` | Run a runtime audit on a live URL (requires Playwright) |
+| `--wcag-level <level>` | Target WCAG level: A, AA, or AAA (default: AA) |
+| `--contrast <standard>` | Contrast algorithm: wcag2 or apca (default: wcag2) |
+| `--project <name>` | Select a workspace project in a monorepo |
+| `-y, --yes` | Skip confirmation prompts |
+| `--install-skill` | Install the ux-doctor skill for AI agents |
+| `--uninstall-skill` | Remove the skill from all AI agents |
+| `-v, --version` | Show version |
 
 ## What It Checks
 
 ### Source Lint (AST-based)
-- **Media** — Missing alt text, SVG accessibility, video captions
-- **ARIA** — Invalid roles, missing required props, redundant roles, hidden focusable
-- **Keyboard** — Click without key handler, positive tabindex, missing focus management
-- **Forms** — Missing labels, autocomplete, error identification
-- **Semantic Structure** — Page language, heading content, static element interactions
+
+| Category | Examples |
+|----------|----------|
+| ARIA | Invalid roles, missing required props, redundant roles, hidden focusable elements |
+| Forms | Missing labels, autocomplete attributes, error identification |
+| Keyboard | Click without key handler, positive tabindex, missing focus management |
+| Media | Missing alt text, SVG accessibility, video captions |
+| Semantic Structure | Page language, heading content, div soup, skip navigation |
+| Navigation | Landmark regions, heading hierarchy |
+| Framework | Next.js Image alt text, React Native accessibility props, tooltip triggers |
 
 ### CSS Analysis (Static)
-- **Contrast** — Text/background color ratios, placeholder contrast, focus ring contrast
-- **Typography** — Base font size, line height, heading hierarchy, fixed px units
-- **Touch Targets** — Minimum 24px, recommended 44px interactive targets
-- **Focus Indicators** — outline:none detection, :focus vs :focus-visible
-- **Motion** — Missing prefers-reduced-motion, transition:all, permanent will-change
-- **Color System** — Hardcoded colors vs tokens, dark mode coverage
+
+| Category | Examples |
+|----------|----------|
+| Contrast | Text/background ratios, placeholder contrast, focus ring contrast, Tailwind class pairs |
+| Typography | Base font size, line height, heading hierarchy, px vs rem |
+| Touch Targets | Minimum 24px sizing, recommended 44px for interactive elements |
+| Focus Indicators | outline:none without replacement, :focus vs :focus-visible |
+| Motion | Missing prefers-reduced-motion, transition:all, permanent will-change |
+| Color System | Hardcoded colors vs design tokens, dark mode coverage |
+| Responsive | Fixed widths, zoom prevention, horizontal scroll |
+
+## AI Agent Integration
+
+Install the ux-doctor skill so your AI coding agent can scan, interpret results, and fix issues automatically.
+
+```bash
+npx ux-doctor@latest --install-skill
+```
+
+This installs SKILL.md and 11 reference guides into each agent's skill directory:
+
+| Agent | Install Path |
+|-------|-------------|
+| Claude Code | `~/.claude/skills/ux-doctor/` |
+| Cursor | `~/.cursor/skills/ux-doctor/` |
+| Amp Code | `~/.config/amp/skills/ux-doctor/` |
+| Codex | `~/.codex/skills/ux-doctor/` |
+| Gemini CLI | `~/.gemini/skills/ux-doctor/` |
+| OpenCode | `~/.config/opencode/skills/ux-doctor/` |
+| Project local | `.agents/ux-doctor/` |
+
+To remove the skill from all agents:
+
+```bash
+npx ux-doctor@latest --uninstall-skill
+```
+
+### Workflow inside an AI agent
+
+1. Run `npx ux-doctor . --agent` to scan
+2. The agent reads the prioritized, file-grouped output
+3. The agent applies fixes using the `fixTarget` and `fixExample` fields
+4. Re-scan to verify the score improved
 
 ## Configuration
 
@@ -76,6 +140,7 @@ Create `ux-doctor.config.json` in your project root:
 ```json
 {
   "wcagLevel": "AA",
+  "contrastStandard": "wcag2",
   "ignore": {
     "rules": ["typography/max-line-length"],
     "files": ["src/generated/**"],
@@ -84,7 +149,9 @@ Create `ux-doctor.config.json` in your project root:
 }
 ```
 
-Or add an `"uxDoctor"` key in `package.json`.
+Or add an `"uxDoctor"` key in your `package.json` with the same structure.
+
+All CLI flags can also be set in the config file: `sourceLint`, `cssAnalysis`, `runtime`, `verbose`, `diff`, `wcagLevel`, `contrastStandard`.
 
 ## Programmatic API
 
@@ -94,21 +161,20 @@ import { diagnose } from "ux-doctor/api";
 const result = await diagnose("./my-project", {
   sourceLint: true,
   cssAnalysis: true,
+  wcagLevel: "AA",
+  contrastStandard: "apca",
 });
 
 console.log(result.scoreResult);  // { score: 72, label: "Needs work" }
 console.log(result.diagnostics);  // Diagnostic[]
 ```
 
-## AI Agent Integration
+Exported types: `Diagnostic`, `ScanOptions`, `ScanResult`, `ScoreResult`, `ProjectInfo`, `JsonOutput`, `UxDoctorConfig`.
 
-Install the skill for your AI coding agent:
+## Requirements
 
-```bash
-npx ux-doctor@latest --install-skill
-```
-
-Supports: Claude Code, Cursor, Amp Code, Codex, Gemini CLI, OpenCode.
+- Node.js >= 20.19.0
+- Runtime audit (`--url`) requires Playwright (installed automatically as optional dependency)
 
 ## License
 
