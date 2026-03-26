@@ -25,6 +25,7 @@ Thumbs.db
 
 # Claude Code
 .claude/
+CLAUDE.md
 
 # Cache & logs
 .cache/
