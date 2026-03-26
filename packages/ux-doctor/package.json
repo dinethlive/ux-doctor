@@ -1,0 +1,77 @@
+{
+  "name": "ux-doctor",
+  "version": "0.1.0",
+  "description": "CLI tool that scans codebases for UX/UI accessibility and design quality issues",
+  "type": "module",
+  "bin": {
+    "ux-doctor": "./dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./api": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "skills"
+  ],
+  "scripts": {
+    "build": "tsdown && node -e \"const fs=require('fs');const f='dist/cli.js';const c=fs.readFileSync(f,'utf8');if(!c.startsWith('#!'))fs.writeFileSync(f,'#!/usr/bin/env node\\n'+c)\"",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "lint": "oxlint src/ tests/",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "commander": "^14.0.0",
+    "oxlint": "^1.47.0",
+    "postcss": "^8.4.0",
+    "postcss-scss": "^4.0.0",
+    "culori": "^4.0.0",
+    "picocolors": "^1.1.0",
+    "ora": "^9.0.0",
+    "prompts": "^2.4.0"
+  },
+  "optionalDependencies": {
+    "@axe-core/playwright": "^4.11.0",
+    "playwright": "^1.48.0",
+    "postcss-styled-syntax": "^0.7.0"
+  },
+  "devDependencies": {
+    "tsdown": "^0.9.0",
+    "vitest": "^2.0.0",
+    "typescript": ">=5.0.4 <7",
+    "@types/prompts": "^2.4.0",
+    "@types/culori": "^2.1.0",
+    "prettier": "^3.0.0"
+  },
+  "keywords": [
+    "accessibility",
+    "a11y",
+    "ux",
+    "wcag",
+    "linter",
+    "cli",
+    "design-quality"
+  ],
+  "license": "MIT",
+  "author": {
+    "name": "Dineth Pramodya",
+    "email": "dinethlive@gmail.com",
+    "url": "https://github.com/dinethlive"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dinethlive/ux-doctor.git"
+  },
+  "homepage": "https://github.com/dinethlive/ux-doctor#readme",
+  "bugs": {
+    "url": "https://github.com/dinethlive/ux-doctor/issues"
+  }
+}
