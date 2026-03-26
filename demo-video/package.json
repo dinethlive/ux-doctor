@@ -1,0 +1,24 @@
+{
+  "name": "ux-doctor-demo",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "remotion studio",
+    "build": "remotion render src/index.ts UxDoctorDemo out/demo.mp4",
+    "render": "remotion render src/index.ts UxDoctorDemo out/demo.mp4"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.0",
+    "@remotion/google-fonts": "^4.0.440",
+    "@remotion/media": "^4.0.440",
+    "@remotion/sfx": "^4.0.440",
+    "@remotion/transitions": "^4.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "remotion": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "typescript": "^5.0.0"
+  }
+}
