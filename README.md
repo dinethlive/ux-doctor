@@ -4,7 +4,9 @@ A CLI that scans your codebase for UX, accessibility, and design quality issues.
 
 Built for AI coding agents (Claude Code, Cursor, Codex, Gemini CLI, Amp Code, OpenCode) and human developers alike.
 
-<video src="https://raw.githubusercontent.com/dinethlive/ux-doctor/main/demo-video/out/demo.mp4" controls width="100%"></video>
+<p align="center">
+  <img src="demo-video/out/demo.gif" alt="UX Doctor CLI demo" width="720">
+</p>
 
 ## Quick Start
 
