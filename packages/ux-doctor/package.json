@@ -1,6 +1,6 @@
 {
   "name": "ux-doctor",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "CLI tool that scans codebases for UX/UI accessibility and design quality issues",
   "type": "module",
   "bin": {

@@ -5,8 +5,9 @@ node_modules/
 dist/
 *.tsbuildinfo
 
-# Demo video output
-demo-video/out/
+# Demo video source output (keep demo.mp4 for README)
+demo-video/out/*.json
+demo-video/out/*.png
 
 # Environment
 .env
